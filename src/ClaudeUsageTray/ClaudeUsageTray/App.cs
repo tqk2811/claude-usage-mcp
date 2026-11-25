@@ -24,6 +24,7 @@ public sealed class App : Application
     public const string DisplayName = "Claude Usage Tray";
 
     private readonly bool _startHidden;
+    private readonly FileLogger _log = new(FileLogger.DefaultDirectory);
     private AppConfig? _config;
     private UsageProvider? _usage;
     private TrayIconHost? _host;
@@ -42,9 +43,14 @@ public sealed class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        _log.Info($"Start {typeof(App).Assembly.GetName().Version} (hidden: {_startHidden})");
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
-        TaskScheduler.UnobservedTaskException += (_, args) => args.SetObserved();
+        TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            _log.Error("Unobserved task exception", args.Exception);
+            args.SetObserved();
+        };
 
         try
         {
@@ -57,6 +63,7 @@ public sealed class App : Application
             catch (Exception ex)
             {
                 loadError = ex;
+                _log.Error($"Config load failed: {_config.FilePath}", ex);
             }
             LocalizationManager loc = LocalizationManager.Instance;
             loc.Culture = LocalizationManager.Resolve(_config.Current.Language);
@@ -71,12 +78,13 @@ public sealed class App : Application
             _registrar = new ClaudeCliRegistrar(exePath);
             _usage = new UsageProvider(new UsageApiClient(new CredentialReader()));
             _host = new TrayIconHost(ShowSettings, () => _controller?.RefreshNow(), ExitApp);
-            _controller = new UsageTrayController(_config, _usage, _host, new NumberIconRenderer(), Dispatcher);
+            _controller = new UsageTrayController(_config, _usage, _host, new NumberIconRenderer(), Dispatcher, _log);
             _controller.Updated += OnFirstUsage;
             _controller.Start();
         }
         catch (Exception ex)
         {
+            _log.Error("Startup failed", ex);
             MessageBox.Show(ex.ToString(), DisplayName, MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(1);
             return;
@@ -93,6 +101,7 @@ public sealed class App : Application
         _controller?.Dispose();
         _host?.Dispose();
         _usage?.Dispose();
+        _log.Info($"Exit (code {e.ApplicationExitCode})");
         base.OnExit(e);
     }
 
@@ -169,20 +178,11 @@ public sealed class App : Application
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
+        _log.Error("Unhandled UI exception", e.Exception);
         MessageBox.Show(e.Exception.ToString(), DisplayName, MessageBoxButton.OK, MessageBoxImage.Error);
         e.Handled = true;
     }
 
-    private static void OnDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
-    {
-        try
-        {
-            string log = Path.Combine(Path.GetTempPath(), "ClaudeUsageTray-crash.log");
-            File.AppendAllText(log, $"{DateTime.Now:O} {e.ExceptionObject}{Environment.NewLine}");
-        }
-        catch
-        {
-            // Nothing left to report to.
-        }
-    }
+    private void OnDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        => _log.Error($"Unhandled exception (terminating: {e.IsTerminating})", e.ExceptionObject);
 }

@@ -4,6 +4,7 @@ using ClaudeUsageTray.Config;
 using ClaudeUsageTray.Config.Enums;
 using ClaudeUsageTray.Config.Helpers;
 using ClaudeUsageTray.Config.Models;
+using ClaudeUsageTray.Diagnostics;
 using ClaudeUsageTray.Localization;
 using ClaudeUsageTray.Tray.Enums;
 using ClaudeUsageTray.Usage;
@@ -28,6 +29,7 @@ public sealed class UsageTrayController : IDisposable
     private readonly TrayIconHost _host;
     private readonly NumberIconRenderer _renderer;
     private readonly Dispatcher _dispatcher;
+    private readonly FileLogger _log;
     /// <summary>
     /// Keyed by slot = <c>uID</c> (1 = first position). Windows 11 remembers each icon's place per uID and ignores the
     /// add order, so the order setting moves the content between fixed slots instead of moving icons.
@@ -38,13 +40,15 @@ public sealed class UsageTrayController : IDisposable
     private int _inFlight;
     private bool _disposed;
 
-    public UsageTrayController(AppConfig config, UsageProvider usage, TrayIconHost host, NumberIconRenderer renderer, Dispatcher dispatcher)
+    public UsageTrayController(AppConfig config, UsageProvider usage, TrayIconHost host, NumberIconRenderer renderer, Dispatcher dispatcher,
+        FileLogger log)
     {
         _config = config;
         _usage = usage;
         _host = host;
         _renderer = renderer;
         _dispatcher = dispatcher;
+        _log = log;
     }
 
     /// <summary>Raised on the dispatcher thread after each refresh attempt.</summary>
@@ -118,10 +122,13 @@ public sealed class UsageTrayController : IDisposable
         try
         {
             result = await _usage.GetAsync(force);
+            if (result.Error is not null)
+                _log.Warn($"Usage fetch failed, showing stale value: {result.Error}");
         }
         catch (Exception ex)
         {
             error = ex.Message;
+            _log.Error("Usage fetch failed", ex);
         }
         Interlocked.Decrement(ref _inFlight);
         try
