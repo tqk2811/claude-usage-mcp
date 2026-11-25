@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TrayRefresh" xml:space="preserve"><value>Làm mới ngay</value></data>
+  <data name="TraySettings" xml:space="preserve"><value>Cài đặt</value></data>
+  <data name="TrayExit" xml:space="preserve"><value>Thoát</value></data>
+  <data name="LabelSession" xml:space="preserve"><value>Phiên 5 giờ</value></data>
+  <data name="LabelWeekly" xml:space="preserve"><value>Tuần (mọi model)</value></data>
+  <data name="TipUsage" xml:space="preserve"><value>{0}: đã dùng {1}%, đặt lại {2} (còn {3})</value></data>
+  <data name="TipUsageNoReset" xml:space="preserve"><value>{0}: đã dùng {1}%</value></data>
+  <data name="TipStale" xml:space="preserve"><value>(dữ liệu cũ)</value></data>
+  <data name="TipError" xml:space="preserve"><value>{0}: lỗi: {1}</value></data>
+  <data name="TipNoData" xml:space="preserve"><value>{0}: chưa có dữ liệu</value></data>
+  <data name="PageTitle" xml:space="preserve"><value>Mức dùng Claude</value></data>
+  <data name="StatusHeader" xml:space="preserve"><value>Mức dùng hiện tại</value></data>
+  <data name="StatusLoading" xml:space="preserve"><value>Đang tải…</value></data>
+  <data name="StatusUpdated" xml:space="preserve"><value>Cập nhật lúc {0}</value></data>
+  <data name="RefreshNow" xml:space="preserve"><value>Làm mới ngay</value></data>
+  <data name="IconsHeader" xml:space="preserve"><value>Biểu tượng khay hệ thống</value></data>
+  <data name="SessionIconHeader" xml:space="preserve"><value>Biểu tượng phiên 5 giờ</value></data>
+  <data name="WeeklyIconHeader" xml:space="preserve"><value>Biểu tượng tuần</value></data>
+  <data name="ShowIcon" xml:space="preserve"><value>Hiện trên khay</value></data>
+  <data name="LowThreshold" xml:space="preserve"><value>Màu giữa từ (%)</value></data>
+  <data name="HighThreshold" xml:space="preserve"><value>Màu cao từ (%)</value></data>
+  <data name="LowColor" xml:space="preserve"><value>Thấp</value></data>
+  <data name="MidColor" xml:space="preserve"><value>Giữa</value></data>
+  <data name="HighColor" xml:space="preserve"><value>Cao</value></data>
+  <data name="BackgroundColor" xml:space="preserve"><value>Nền</value></data>
+  <data name="BothHiddenHint" xml:space="preserve"><value>Cả hai biểu tượng đang ẩn: chạy lại ứng dụng để mở cài đặt này.</value></data>
+  <data name="RefreshHeader" xml:space="preserve"><value>Chu kỳ làm mới (giây)</value></data>
+  <data name="RefreshDescription" xml:space="preserve"><value>Bao lâu cập nhật biểu tượng một lần; tối thiểu 30 giây</value></data>
+  <data name="GeneralHeader" xml:space="preserve"><value>Chung</value></data>
+  <data name="AutoStartHeader" xml:space="preserve"><value>Khởi động cùng Windows</value></data>
+  <data name="AutoStartDescription" xml:space="preserve"><value>Chạy trên khay hệ thống mỗi lần đăng nhập</value></data>
+  <data name="Language" xml:space="preserve"><value>Ngôn ngữ</value></data>
+  <data name="Theme" xml:space="preserve"><value>Giao diện</value></data>
+  <data name="ThemeSystem" xml:space="preserve"><value>Theo Windows</value></data>
+  <data name="ThemeLight" xml:space="preserve"><value>Sáng</value></data>
+  <data name="ThemeDark" xml:space="preserve"><value>Tối</value></data>
+  <data name="McpHeader" xml:space="preserve"><value>MCP server cho Claude Code</value></data>
+  <data name="McpDescription" xml:space="preserve"><value>Exe này cũng chạy được như MCP server claude-usage (--mcp). Đăng ký cho người dùng hiện tại:</value></data>
+  <data name="Copy" xml:space="preserve"><value>Sao chép</value></data>
+  <data name="Copied" xml:space="preserve"><value>Đã chép</value></data>
+  <data name="Register" xml:space="preserve"><value>Đăng ký</value></data>
+  <data name="Unregister" xml:space="preserve"><value>Gỡ đăng ký</value></data>
+  <data name="CheckStatus" xml:space="preserve"><value>Kiểm tra</value></data>
+  <data name="McpStatusRegistered" xml:space="preserve"><value>Đã đăng ký</value></data>
+  <data name="McpStatusRegisteredScope" xml:space="preserve"><value>Đã đăng ký (phạm vi {0})</value></data>
+  <data name="McpStatusNotRegistered" xml:space="preserve"><value>Chưa đăng ký</value></data>
+  <data name="McpRunning" xml:space="preserve"><value>Đang chạy claude…</value></data>
+  <data name="McpClaudeNotFound" xml:space="preserve"><value>Không tìm thấy claude trong PATH</value></data>
+  <data name="ErrorSaveConfig" xml:space="preserve"><value>Không lưu được cài đặt</value></data>
+  <data name="ConfigLoadFailed" xml:space="preserve"><value>Không đọc được {0}:
+{1}
+
+Dùng cài đặt mặc định.</value></data>
+  <data name="IconOrderHeader" xml:space="preserve"><value>Thứ tự biểu tượng</value></data>
+  <data name="IconOrderDescription" xml:space="preserve"><value>Khay xếp biểu tượng theo thứ tự thêm vào; kéo thả tay trên khay có thể ghi đè</value></data>
+  <data name="OrderSessionFirst" xml:space="preserve"><value>Phiên trước</value></data>
+  <data name="OrderWeeklyFirst" xml:space="preserve"><value>Tuần trước</value></data>
+  <data name="FontHeader" xml:space="preserve"><value>Phông chữ số trên khay</value></data>
+  <data name="FontBold" xml:space="preserve"><value>Đậm</value></data>
+</root>

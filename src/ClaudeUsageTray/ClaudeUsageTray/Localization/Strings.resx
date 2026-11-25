@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TrayRefresh" xml:space="preserve"><value>Refresh now</value></data>
+  <data name="TraySettings" xml:space="preserve"><value>Settings</value></data>
+  <data name="TrayExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="LabelSession" xml:space="preserve"><value>5-hour session</value></data>
+  <data name="LabelWeekly" xml:space="preserve"><value>Weekly (all models)</value></data>
+  <data name="TipUsage" xml:space="preserve"><value>{0}: {1}% used, resets {2} (in {3})</value></data>
+  <data name="TipUsageNoReset" xml:space="preserve"><value>{0}: {1}% used</value></data>
+  <data name="TipStale" xml:space="preserve"><value>(stale)</value></data>
+  <data name="TipError" xml:space="preserve"><value>{0}: error: {1}</value></data>
+  <data name="TipNoData" xml:space="preserve"><value>{0}: no data yet</value></data>
+  <data name="PageTitle" xml:space="preserve"><value>Claude usage</value></data>
+  <data name="StatusHeader" xml:space="preserve"><value>Current usage</value></data>
+  <data name="StatusLoading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="StatusUpdated" xml:space="preserve"><value>Updated {0}</value></data>
+  <data name="RefreshNow" xml:space="preserve"><value>Refresh now</value></data>
+  <data name="IconsHeader" xml:space="preserve"><value>Tray icons</value></data>
+  <data name="SessionIconHeader" xml:space="preserve"><value>5-hour session icon</value></data>
+  <data name="WeeklyIconHeader" xml:space="preserve"><value>Weekly icon</value></data>
+  <data name="ShowIcon" xml:space="preserve"><value>Show in the tray</value></data>
+  <data name="LowThreshold" xml:space="preserve"><value>Mid color from (%)</value></data>
+  <data name="HighThreshold" xml:space="preserve"><value>High color from (%)</value></data>
+  <data name="LowColor" xml:space="preserve"><value>Low</value></data>
+  <data name="MidColor" xml:space="preserve"><value>Mid</value></data>
+  <data name="HighColor" xml:space="preserve"><value>High</value></data>
+  <data name="BackgroundColor" xml:space="preserve"><value>Background</value></data>
+  <data name="BothHiddenHint" xml:space="preserve"><value>Both icons are hidden: launch the app again to open these settings.</value></data>
+  <data name="RefreshHeader" xml:space="preserve"><value>Refresh interval (seconds)</value></data>
+  <data name="RefreshDescription" xml:space="preserve"><value>How often the icons are updated; at least 30 seconds</value></data>
+  <data name="GeneralHeader" xml:space="preserve"><value>General</value></data>
+  <data name="AutoStartHeader" xml:space="preserve"><value>Start with Windows</value></data>
+  <data name="AutoStartDescription" xml:space="preserve"><value>Run in the system tray every time you sign in</value></data>
+  <data name="Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="ThemeSystem" xml:space="preserve"><value>Follow Windows</value></data>
+  <data name="ThemeLight" xml:space="preserve"><value>Light</value></data>
+  <data name="ThemeDark" xml:space="preserve"><value>Dark</value></data>
+  <data name="McpHeader" xml:space="preserve"><value>MCP server for Claude Code</value></data>
+  <data name="McpDescription" xml:space="preserve"><value>This exe also runs as the claude-usage MCP server (--mcp). Register it for your user:</value></data>
+  <data name="Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Copied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Register" xml:space="preserve"><value>Register</value></data>
+  <data name="Unregister" xml:space="preserve"><value>Unregister</value></data>
+  <data name="CheckStatus" xml:space="preserve"><value>Check status</value></data>
+  <data name="McpStatusRegistered" xml:space="preserve"><value>Registered</value></data>
+  <data name="McpStatusRegisteredScope" xml:space="preserve"><value>Registered ({0} scope)</value></data>
+  <data name="McpStatusNotRegistered" xml:space="preserve"><value>Not registered</value></data>
+  <data name="McpRunning" xml:space="preserve"><value>Running claude…</value></data>
+  <data name="McpClaudeNotFound" xml:space="preserve"><value>claude was not found on PATH</value></data>
+  <data name="ErrorSaveConfig" xml:space="preserve"><value>Could not save settings</value></data>
+  <data name="ConfigLoadFailed" xml:space="preserve"><value>Could not read {0}:
+{1}
+
+Starting with default settings.</value></data>
+  <data name="IconOrderHeader" xml:space="preserve"><value>Icon order</value></data>
+  <data name="IconOrderDescription" xml:space="preserve"><value>The shell places icons in the order they are added; dragging them in the tray may override this</value></data>
+  <data name="OrderSessionFirst" xml:space="preserve"><value>Session first</value></data>
+  <data name="OrderWeeklyFirst" xml:space="preserve"><value>Weekly first</value></data>
+  <data name="FontHeader" xml:space="preserve"><value>Tray number font</value></data>
+  <data name="FontBold" xml:space="preserve"><value>Bold</value></data>
+</root>

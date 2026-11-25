@@ -1,0 +1,160 @@
+<ui:FluentWindow x:Class="ClaudeUsageTray.UI.SettingsWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:loc="clr-namespace:ClaudeUsageTray.Localization"
+                 xmlns:controls="clr-namespace:ClaudeUsageTray.UI.Controls"
+                 xmlns:app="clr-namespace:ClaudeUsageTray"
+                 Title="{x:Static app:App.DisplayName}" Width="820" Height="760" MinWidth="480" MinHeight="420"
+                 WindowStartupLocation="CenterScreen"
+                 ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{x:Static app:App.DisplayName}" Height="32" Padding="12,0,0,0" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="40,8,40,32" MaxWidth="1000">
+                <TextBlock Text="{loc:Tr PageTitle}" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,20" />
+
+                <!-- Current usage -->
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="DataUsage24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Tr StatusHeader}" FontSize="14" />
+                            <TextBlock x:Name="StatusText" FontSize="12" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:Button x:Name="RefreshButton" Content="{loc:Tr RefreshNow}" Icon="{ui:SymbolIcon ArrowClockwise24}"
+                               Click="OnRefreshClick" />
+                </ui:CardControl>
+
+                <!-- Tray icons -->
+                <TextBlock Text="{loc:Tr IconsHeader}" FontSize="14" FontWeight="SemiBold" Margin="0,24,0,8" />
+                <controls:IconSettingsPanel x:Name="SessionPanel" />
+                <controls:IconSettingsPanel x:Name="WeeklyPanel" />
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="ArrowSort24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Tr IconOrderHeader}" FontSize="14" />
+                            <TextBlock Text="{loc:Tr IconOrderDescription}" FontSize="12" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ComboBox x:Name="OrderBox" MinWidth="160" SelectionChanged="OnOrderChanged">
+                        <ComboBoxItem Tag="SessionFirst" Content="{loc:Tr OrderSessionFirst}" />
+                        <ComboBoxItem Tag="WeeklyFirst" Content="{loc:Tr OrderWeeklyFirst}" />
+                    </ComboBox>
+                </ui:CardControl>
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="TextFont24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <TextBlock Text="{loc:Tr FontHeader}" FontSize="14" />
+                    </ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox x:Name="FontBox" Width="220" Margin="0,0,16,0" SelectionChanged="OnFontChanged"
+                                  AutomationProperties.Name="{loc:Tr FontHeader}" />
+                        <TextBlock Text="{loc:Tr FontBold}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ui:ToggleSwitch x:Name="BoldToggle" Click="OnBoldClick" />
+                    </StackPanel>
+                </ui:CardControl>
+                <TextBlock x:Name="BothHiddenText" Text="{loc:Tr BothHiddenHint}" FontSize="12" TextWrapping="Wrap" Visibility="Collapsed"
+                           Margin="0,0,0,4" Foreground="{DynamicResource SystemFillColorCautionBrush}" />
+
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Timer24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Tr RefreshHeader}" FontSize="14" />
+                            <TextBlock Text="{loc:Tr RefreshDescription}" FontSize="12" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:NumberBox x:Name="IntervalBox" Width="150" Minimum="30" Maximum="86400" SmallChange="30" MaxDecimalPlaces="0"
+                                  ValueChanged="OnIntervalChanged" />
+                </ui:CardControl>
+
+                <!-- General -->
+                <TextBlock Text="{loc:Tr GeneralHeader}" FontSize="14" FontWeight="SemiBold" Margin="0,24,0,8" />
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Power24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Tr AutoStartHeader}" FontSize="14" />
+                            <TextBlock Text="{loc:Tr AutoStartDescription}" FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch x:Name="AutoStartToggle" Click="OnAutoStartClick" />
+                </ui:CardControl>
+
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="LocalLanguage24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <TextBlock Text="{loc:Tr Language}" FontSize="14" />
+                    </ui:CardControl.Header>
+                    <ComboBox x:Name="LanguageBox" MinWidth="160" DisplayMemberPath="NativeName" SelectionChanged="OnLanguageChanged" />
+                </ui:CardControl>
+
+                <ui:CardControl Margin="0,0,0,4">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="DarkTheme24" />
+                    </ui:CardControl.Icon>
+                    <ui:CardControl.Header>
+                        <TextBlock Text="{loc:Tr Theme}" FontSize="14" />
+                    </ui:CardControl.Header>
+                    <ComboBox x:Name="ThemeBox" MinWidth="160" SelectionChanged="OnThemeChanged">
+                        <ComboBoxItem Tag="System" Content="{loc:Tr ThemeSystem}" />
+                        <ComboBoxItem Tag="Light" Content="{loc:Tr ThemeLight}" />
+                        <ComboBoxItem Tag="Dark" Content="{loc:Tr ThemeDark}" />
+                    </ComboBox>
+                </ui:CardControl>
+
+                <!-- MCP -->
+                <TextBlock Text="{loc:Tr McpHeader}" FontSize="14" FontWeight="SemiBold" Margin="0,24,0,8" />
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr McpDescription}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="CommandBox" IsReadOnly="True" FontFamily="Consolas" TextWrapping="Wrap" />
+                            <ui:Button x:Name="CopyButton" Grid.Column="1" Margin="8,0,0,0" Icon="{ui:SymbolIcon Copy24}"
+                                       Content="{loc:Tr Copy}" Click="OnCopyClick" VerticalAlignment="Top" />
+                        </Grid>
+                        <WrapPanel>
+                            <ui:Button x:Name="RegisterButton" Content="{loc:Tr Register}" Appearance="Primary" Margin="0,0,8,4"
+                                       Click="OnRegisterClick" />
+                            <ui:Button x:Name="UnregisterButton" Content="{loc:Tr Unregister}" Margin="0,0,8,4" Click="OnUnregisterClick" />
+                            <ui:Button x:Name="StatusButton" Content="{loc:Tr CheckStatus}" Margin="0,0,16,4" Click="OnStatusClick" />
+                            <TextBlock x:Name="McpStatusText" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,0,4" />
+                        </WrapPanel>
+                        <TextBox x:Name="McpOutputBox" IsReadOnly="True" FontFamily="Consolas" FontSize="12" TextWrapping="Wrap"
+                                 MaxHeight="160" VerticalScrollBarVisibility="Auto" Margin="0,8,0,0" Visibility="Collapsed" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</ui:FluentWindow>

@@ -1,0 +1,55 @@
+<UserControl x:Class="ClaudeUsageTray.UI.Controls.IconSettingsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:ClaudeUsageTray.Localization"
+             xmlns:controls="clr-namespace:ClaudeUsageTray.UI.Controls">
+    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1" CornerRadius="8" Padding="16,12" Margin="0,0,0,4">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="TitleText" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="{loc:Tr ShowIcon}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ui:ToggleSwitch x:Name="VisibleToggle" Click="OnVisibleClick" />
+                </StackPanel>
+            </Grid>
+
+            <WrapPanel Margin="0,10,0,0">
+                <StackPanel Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Tr LowThreshold}" FontSize="12" Margin="0,0,0,4" />
+                    <ui:NumberBox x:Name="LowBox" Width="140" Minimum="0" Maximum="100" SmallChange="5" MaxDecimalPlaces="0"
+                                  ValueChanged="OnThresholdChanged" />
+                </StackPanel>
+                <StackPanel Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Tr HighThreshold}" FontSize="12" Margin="0,0,0,4" />
+                    <ui:NumberBox x:Name="HighBox" Width="140" Minimum="0" Maximum="100" SmallChange="5" MaxDecimalPlaces="0"
+                                  ValueChanged="OnThresholdChanged" />
+                </StackPanel>
+            </WrapPanel>
+
+            <WrapPanel Margin="0,4,0,0">
+                <StackPanel Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Tr LowColor}" FontSize="12" Margin="0,0,0,4" />
+                    <controls:ColorPickerBox x:Name="LowColorBox" ColorChanged="OnColorChanged" />
+                </StackPanel>
+                <StackPanel Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Tr MidColor}" FontSize="12" Margin="0,0,0,4" />
+                    <controls:ColorPickerBox x:Name="MidColorBox" ColorChanged="OnColorChanged" />
+                </StackPanel>
+                <StackPanel Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Tr HighColor}" FontSize="12" Margin="0,0,0,4" />
+                    <controls:ColorPickerBox x:Name="HighColorBox" ColorChanged="OnColorChanged" />
+                </StackPanel>
+                <StackPanel Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Tr BackgroundColor}" FontSize="12" Margin="0,0,0,4" />
+                    <controls:ColorPickerBox x:Name="BackgroundColorBox" ColorChanged="OnColorChanged" />
+                </StackPanel>
+            </WrapPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

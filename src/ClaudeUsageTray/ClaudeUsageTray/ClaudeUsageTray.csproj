@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>ClaudeUsageTray</RootNamespace>
+		<!-- Own Main (Program.cs): the MCP/CLI modes branch off before any WPF type is touched. -->
+		<StartupObject>ClaudeUsageTray.Program</StartupObject>
+		<!-- Mostly idle in the tray: no background GC thread, and give memory back eagerly. -->
+		<ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+		<!-- Only the UI languages the app has; drops the other satellite assemblies of WPF-UI. -->
+		<SatelliteResourceLanguages>en;vi</SatelliteResourceLanguages>
+		<!-- NumberIconRenderer writes DIB pixels through spans over native memory. -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="7" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- UseWPF drops System.IO from implicit usings. -->
+		<Using Include="System.IO" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Windows 11 Settings look for the settings window; its dictionaries are merged only while it is open. -->
+		<PackageReference Include="WPF-UI" Version="4.3.0" />
+	</ItemGroup>
+
+	<!--
+		Version from the nearest git tag vM.N.P:
+		- on the tagged commit: M.N.P;
+		- K commits after it: M.N.P-dev.K, so a local build never looks like a released one.
+		No tag yet: 0.0.0. No git (e.g. source zip): the SDK default 1.0.0.
+	-->
+	<Target Name="SetVersionFromGit" BeforeTargets="GetAssemblyVersion">
+		<Exec Command="git describe --tags --long --match &quot;v[0-9]*.[0-9]*.[0-9]*&quot;" WorkingDirectory="$(MSBuildProjectDirectory)"
+		      ConsoleToMSBuild="true" StandardOutputImportance="low" StandardErrorImportance="low" IgnoreExitCode="true" EchoOff="true">
+			<Output TaskParameter="ConsoleOutput" PropertyName="_GitDescribe" />
+			<Output TaskParameter="ExitCode" PropertyName="_GitDescribeExit" />
+		</Exec>
+		<!-- describe also fails in a repo without tags; rev-parse tells that apart from "no git". -->
+		<Exec Command="git rev-parse HEAD" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="'$(_GitDescribeExit)' != '0'"
+		      ConsoleToMSBuild="true" StandardOutputImportance="low" StandardErrorImportance="low" IgnoreExitCode="true" EchoOff="true">
+			<Output TaskParameter="ExitCode" PropertyName="_GitRevParseExit" />
+		</Exec>
+		<PropertyGroup Condition="'$(_GitDescribeExit)' == '0'">
+			<_GitVersion>$([System.Text.RegularExpressions.Regex]::Match('$(_GitDescribe.Trim())', '^v(\d+\.\d+\.\d+)-\d+-g').Groups[1].Value)</_GitVersion>
+			<_GitDistance>$([System.Text.RegularExpressions.Regex]::Match('$(_GitDescribe.Trim())', '-(\d+)-g[0-9a-f]+$').Groups[1].Value)</_GitDistance>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(_GitDescribeExit)' != '0' and '$(_GitRevParseExit)' == '0'">
+			<_GitVersion>0.0.0</_GitVersion>
+			<_GitDistance>0</_GitDistance>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(_GitVersion)' != '' and '$(_GitDistance)' != ''">
+			<Version>$(_GitVersion)</Version>
+			<FileVersion>$(_GitVersion).$(_GitDistance)</FileVersion>
+			<InformationalVersion>$(_GitVersion)</InformationalVersion>
+			<InformationalVersion Condition="'$(_GitDistance)' != '0'">$(_GitVersion)-dev.$(_GitDistance)</InformationalVersion>
+		</PropertyGroup>
+		<Message Importance="high" Text="ClaudeUsageTray version: $(InformationalVersion)" />
+	</Target>
+
+</Project>
