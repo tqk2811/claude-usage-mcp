@@ -34,7 +34,6 @@ public sealed class TrayIconHost : IDisposable
     private readonly int _taskbarCreatedMessage;
     private readonly int _showMessage;
     private readonly Dictionary<uint, (IntPtr Icon, string Tip)> _shown = [];
-    private uint[] _order = [];
     private bool _disposed;
 
     public TrayIconHost(Action openSettings, Action refreshNow, Action exit)
@@ -76,24 +75,6 @@ public sealed class TrayIconHost : IDisposable
         }
     }
 
-    /// <summary>
-    /// Sets the order icons are added in. When it changed (or <paramref name="force"/>), every shown icon is deleted
-    /// and added again in that order, since the shell places icons by the order they were added.
-    /// </summary>
-    public void SetOrder(uint[] order, bool force)
-    {
-        bool changed = !order.SequenceEqual(_order);
-        _order = order;
-        if (!changed && !force)
-            return;
-        foreach (uint id in _shown.Keys)
-        {
-            NotifyIconData data = CreateData(id, 0, IntPtr.Zero, "");
-            Shell_NotifyIcon(NimDelete, ref data);
-        }
-        AddAllInOrder();
-    }
-
     public void Hide(uint id)
     {
         if (!_shown.Remove(id))
@@ -115,8 +96,7 @@ public sealed class TrayIconHost : IDisposable
 
     private void AddAllInOrder()
     {
-        IEnumerable<uint> ids = _order.Where(_shown.ContainsKey).Concat(_shown.Keys.Where(x => !_order.Contains(x))).ToList();
-        foreach (uint id in ids)
+        foreach (uint id in _shown.Keys.Order())
         {
             (IntPtr icon, string tip) = _shown[id];
             NotifyIconData data = CreateData(id, NifMessage | NifIcon | NifTip, icon, tip);

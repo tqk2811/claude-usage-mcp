@@ -1,6 +1,6 @@
 namespace ClaudeUsageTray.Tray.Enums;
 
-/// <summary>The two tray icons; the value is the <c>NOTIFYICONDATA.uID</c>.</summary>
+/// <summary>The two usage icons. Not the <c>NOTIFYICONDATA.uID</c>: that is the position slot (see UsageTrayController).</summary>
 public enum UsageIconKind : uint
 {
     Session = 1,

@@ -20,14 +20,19 @@ namespace ClaudeUsageTray.Tray;
 /// </summary>
 public sealed class UsageTrayController : IDisposable
 {
-    private static readonly UsageIconKind[] _kinds = [UsageIconKind.Session, UsageIconKind.Weekly];
+    private static readonly UsageIconKind[] _sessionFirst = [UsageIconKind.Session, UsageIconKind.Weekly];
+    private static readonly UsageIconKind[] _weeklyFirst = [UsageIconKind.Weekly, UsageIconKind.Session];
 
     private readonly AppConfig _config;
     private readonly UsageProvider _usage;
     private readonly TrayIconHost _host;
     private readonly NumberIconRenderer _renderer;
     private readonly Dispatcher _dispatcher;
-    private readonly Dictionary<UsageIconKind, (IntPtr Icon, string Key)> _icons = [];
+    /// <summary>
+    /// Keyed by slot = <c>uID</c> (1 = first position). Windows 11 remembers each icon's place per uID and ignores the
+    /// add order, so the order setting moves the content between fixed slots instead of moving icons.
+    /// </summary>
+    private readonly Dictionary<uint, (IntPtr Icon, string Key)> _icons = [];
     private Timer? _timer;
     private int _periodSeconds;
     private int _inFlight;
@@ -75,9 +80,9 @@ public sealed class UsageTrayController : IDisposable
         LocalizationManager.Instance.CultureChanged -= OnCultureChanged;
         _host.SystemMetricsChanged -= OnSystemMetricsChanged;
         _timer?.Dispose();
-        foreach ((UsageIconKind kind, (IntPtr icon, _)) in _icons)
+        foreach ((uint slot, (IntPtr icon, _)) in _icons)
         {
-            _host.Hide((uint)kind);
+            _host.Hide(slot);
             NumberIconRenderer.DestroyIconHandle(icon);
         }
         _icons.Clear();
@@ -161,43 +166,34 @@ public sealed class UsageTrayController : IDisposable
         ConfigData config = _config.Current;
         List<UsageWindow> windows = Latest is null ? [] : UsageFormatter.Summarize(Latest.Data);
         int size = NumberIconRenderer.SystemIconSize;
-        bool added = false;
-        foreach (UsageIconKind kind in _kinds)
+        UsageIconKind[] visible = (config.IconOrder == IconOrder.WeeklyFirst ? _weeklyFirst : _sessionFirst)
+            .Where(kind => (kind == UsageIconKind.Session ? config.Session : config.Weekly).Visible)
+            .ToArray();
+        for (int i = 0; i < visible.Length; i++)
         {
+            uint slot = (uint)(i + 1);
+            UsageIconKind kind = visible[i];
             IconSettings settings = kind == UsageIconKind.Session ? config.Session : config.Weekly;
-            if (!settings.Visible)
-            {
-                RemoveIcon(kind);
-                continue;
-            }
-
             (string text, uint color, string tip) = Describe(kind, settings, windows);
             uint background = ColorHexHelper.Parse(settings.BackgroundColor, 0);
             string key = string.Join('|', text, color, background, size, tip, config.FontFamily, config.FontBold);
-            if (_icons.TryGetValue(kind, out var current) && current.Key == key)
+            if (_icons.TryGetValue(slot, out var current) && current.Key == key)
                 continue;
 
-            added |= !_icons.ContainsKey(kind);
             IntPtr icon = _renderer.Render(text, color, background, size, config.FontFamily, config.FontBold);
-            _host.Show((uint)kind, icon, tip);
-            _icons[kind] = (icon, key);
+            _host.Show(slot, icon, tip);
+            _icons[slot] = (icon, key);
             NumberIconRenderer.DestroyIconHandle(current.Icon);
         }
-
-        // A newly shown icon lands at the end, so re-add both to keep the chosen order.
-        // Icons are added in this order. Windows 11 also remembers where each icon was (and any drag by the user),
-        // so the shell may keep an earlier position.
-        uint[] order = config.IconOrder == IconOrder.WeeklyFirst
-            ? [(uint)UsageIconKind.Weekly, (uint)UsageIconKind.Session]
-            : [(uint)UsageIconKind.Session, (uint)UsageIconKind.Weekly];
-        _host.SetOrder(order, force: added && _icons.Count > 1);
+        foreach (uint slot in _icons.Keys.Where(slot => slot > visible.Length).ToList())
+            RemoveSlot(slot);
     }
 
-    private void RemoveIcon(UsageIconKind kind)
+    private void RemoveSlot(uint slot)
     {
-        if (!_icons.Remove(kind, out var current))
+        if (!_icons.Remove(slot, out var current))
             return;
-        _host.Hide((uint)kind);
+        _host.Hide(slot);
         NumberIconRenderer.DestroyIconHandle(current.Icon);
     }
 

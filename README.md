@@ -58,8 +58,8 @@ dotnet build src/ClaudeUsageTray/ClaudeUsageTray.slnx -c Release
   colors per icon, background color (default transparent), font family and bold, icon order, refresh interval
   (default 60 s, minimum 30 s), start with Windows (`HKCU\...\Run` with `--tray`), language (English/Vietnamese),
   theme (System/Light/Dark).
-- Icon order is applied by re-adding both icons; Windows 11 remembers icon positions, and dragging an icon by hand
-  overrides the setting.
+- Icon order swaps which number each tray slot shows (Windows 11 keeps each icon's position, so icons are never
+  re-added); slot 1 is the icon Windows placed first.
 - Launching the exe again while it runs opens the settings window of the running instance (useful when both icons
   are hidden).
 - The idle tray runs on WPF core (`Application`, the `HwndSource` message window, `Dispatcher`), with no
