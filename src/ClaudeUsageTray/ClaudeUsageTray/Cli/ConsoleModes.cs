@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using ClaudeUsageTray.Mcp;
 using ClaudeUsageTray.Usage;
 using ClaudeUsageTray.Usage.Models;
@@ -22,8 +24,43 @@ public static class ConsoleModes
         using StreamReader input = new(Console.OpenStandardInput(), new UTF8Encoding(false));
         using StreamWriter output = new(Console.OpenStandardOutput(), new UTF8Encoding(false));
         // Entry point boundary: Main has to stay synchronous ([STAThread] for the tray mode).
-        new McpServer(usage, input, output).RunAsync().GetAwaiter().GetResult();
+        RunStdioAsync(new McpRequestHandler(usage), input, output).GetAwaiter().GetResult();
         return 0;
+    }
+
+    /// <summary>Newline-delimited JSON-RPC until stdin closes; lines handled concurrently, writes serialized.</summary>
+    private static async Task RunStdioAsync(McpRequestHandler handler, TextReader input, TextWriter output)
+    {
+        object writeLock = new();
+        List<Task> pending = [];
+        while (await input.ReadLineAsync() is { } line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+            pending.RemoveAll(x => x.IsCompleted);
+            pending.Add(Task.Run(async () =>
+            {
+                JsonObject? response;
+                try
+                {
+                    response = await handler.HandleAsync(JsonNode.Parse(line));
+                }
+                catch (JsonException)
+                {
+                    response = McpRequestHandler.ParseError();
+                }
+                if (response is null)
+                    return;
+                string json = response.ToJsonString(McpRequestHandler.CompactJson);
+                lock (writeLock)
+                {
+                    output.Write(json);
+                    output.Write('\n');
+                    output.Flush();
+                }
+            }));
+        }
+        await Task.WhenAll(pending);
     }
 
     public static int RunOnce()
