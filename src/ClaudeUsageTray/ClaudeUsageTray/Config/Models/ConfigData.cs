@@ -29,5 +29,5 @@ public sealed record ConfigData
 
     public IconSettings Session { get; set; } = new();
 
-    public IconSettings Weekly { get; set; } = new();
+    public IconSettings Weekly { get; set; } = IconSettings.CreateWeeklyDefault();
 }

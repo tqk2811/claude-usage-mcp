@@ -23,4 +23,12 @@ public sealed record IconSettings
 
     /// <summary>Default fully transparent: only the number is drawn.</summary>
     public string BackgroundColor { get; set; } = "#00000000";
+
+    /// <summary>Weekly icon defaults: blue/violet/pink so it is told apart from the green/amber/red session icon.</summary>
+    public static IconSettings CreateWeeklyDefault() => new()
+    {
+        LowColor = "#FF38BDF8",
+        MidColor = "#FFA78BFA",
+        HighColor = "#FFF472B6",
+    };
 }

@@ -93,7 +93,7 @@ public sealed class AppConfig
         FontFamily = string.IsNullOrWhiteSpace(data.FontFamily) ? ConfigData.DefaultFontFamily : data.FontFamily.Trim(),
         RefreshSeconds = Math.Clamp(data.RefreshSeconds, ConfigData.MinRefreshSeconds, ConfigData.MaxRefreshSeconds),
         Session = Normalize(data.Session ?? new IconSettings()),
-        Weekly = Normalize(data.Weekly ?? new IconSettings()),
+        Weekly = Normalize(data.Weekly ?? IconSettings.CreateWeeklyDefault()),
     };
 
     private static IconSettings Normalize(IconSettings icon)
