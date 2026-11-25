@@ -41,7 +41,7 @@ Weekly (all models): 77% used, resets 11/18/2026, 8:00:00 PM (in 15h 44m)
 ## Tray app (Windows)
 
 `src/ClaudeUsageTray` is a small WPF tray app (.NET 8) that shows two live numbers in the notification area:
-the **5-hour session** percent and the **weekly (all models)** percent. The same exe also works as the MCP server.
+the **5-hour session** percent and the **weekly (all models)** percent. While running, the tray also serves the MCP server over HTTP.
 
 Build:
 
@@ -68,11 +68,15 @@ dotnet build src/ClaudeUsageTray/ClaudeUsageTray.slnx -c Release
 
 Command line:
 
-- `ClaudeUsageTray.exe --mcp` — stdio MCP server, same `get_usage` tool and output as the Node server.
-  Register it from the settings window (MCP section: copy the command, Register/Unregister) or by hand:
-  `claude mcp add --scope user claude-usage -- "C:\path\to\ClaudeUsageTray.exe" --mcp`
 - `ClaudeUsageTray.exe --once` — print the summary and exit.
 - `ClaudeUsageTray.exe --tray` — start hidden in the tray (what autostart uses).
+
+MCP over HTTP: the running tray listens on `http://127.0.0.1:52417/mcp` (port editable in Settings; changing it
+restarts the server, register again afterwards), same `get_usage` tool and output as the Node server, sharing the
+tray's cache. Only loopback is bound (no admin rights needed) and requests with a non-localhost `Origin` are refused.
+The server exists only while the tray runs, so turn on Start with Windows. Register it from the settings window (MCP
+section: copy the command, Register/Unregister) or by hand:
+`claude mcp add --scope user --transport http claude-usage http://127.0.0.1:52417/mcp`
 
 Unlike the Node server, the C# app does **not** use the shared cache/lock files: each process keeps its own
 in-memory cache (30 s, one request in flight; on a failed refresh the last value is returned marked stale).
