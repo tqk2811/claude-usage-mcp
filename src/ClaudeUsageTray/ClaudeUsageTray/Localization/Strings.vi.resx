@@ -41,7 +41,7 @@
   <data name="ThemeLight" xml:space="preserve"><value>Sáng</value></data>
   <data name="ThemeDark" xml:space="preserve"><value>Tối</value></data>
   <data name="McpHeader" xml:space="preserve"><value>MCP server cho Claude Code</value></data>
-  <data name="McpDescription" xml:space="preserve"><value>Exe này cũng chạy được như MCP server claude-usage (--mcp). Đăng ký cho người dùng hiện tại:</value></data>
+  <data name="McpDescription" xml:space="preserve"><value>Khi tray đang chạy, nó phục vụ MCP server claude-usage qua HTTP ở URL bên dưới. Đăng ký cho người dùng hiện tại:</value></data>
   <data name="Copy" xml:space="preserve"><value>Sao chép</value></data>
   <data name="Copied" xml:space="preserve"><value>Đã chép</value></data>
   <data name="Register" xml:space="preserve"><value>Đăng ký</value></data>
@@ -52,6 +52,12 @@
   <data name="McpStatusNotRegistered" xml:space="preserve"><value>Chưa đăng ký</value></data>
   <data name="McpRunning" xml:space="preserve"><value>Đang chạy claude…</value></data>
   <data name="McpClaudeNotFound" xml:space="preserve"><value>Không tìm thấy claude trong PATH</value></data>
+  <data name="McpPortHeader" xml:space="preserve"><value>Cổng</value></data>
+  <data name="McpServerListening" xml:space="preserve"><value>Server đang nghe ở {0}</value></data>
+  <data name="McpServerFailed" xml:space="preserve"><value>Server không nghe được ở cổng {0}: {1}</value></data>
+  <data name="McpServerStopped" xml:space="preserve"><value>Server không chạy</value></data>
+  <data name="McpPortChanged" xml:space="preserve"><value>Đã đổi cổng: bấm Đăng ký lại để Claude dùng URL mới.</value></data>
+  <data name="McpAutoStartHint" xml:space="preserve"><value>MCP server chỉ chạy khi tray đang chạy. Hãy bật Khởi động cùng Windows để lúc nào cũng dùng được.</value></data>
   <data name="ErrorSaveConfig" xml:space="preserve"><value>Không lưu được cài đặt</value></data>
   <data name="ConfigLoadFailed" xml:space="preserve"><value>Không đọc được {0}:
 {1}

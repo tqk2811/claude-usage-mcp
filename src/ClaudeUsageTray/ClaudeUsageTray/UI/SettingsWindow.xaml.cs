@@ -28,16 +28,19 @@ public partial class SettingsWindow : FluentWindow
     private readonly UsageTrayController _controller;
     private readonly AutoStartManager _autoStart;
     private readonly ClaudeCliRegistrar _registrar;
+    private readonly McpHttpServer _mcpServer;
     private readonly ThemeController _theme;
     private bool _loading;
     private bool _closed;
 
-    public SettingsWindow(AppConfig config, UsageTrayController controller, AutoStartManager autoStart, ClaudeCliRegistrar registrar)
+    public SettingsWindow(AppConfig config, UsageTrayController controller, AutoStartManager autoStart, ClaudeCliRegistrar registrar,
+        McpHttpServer mcpServer)
     {
         _config = config;
         _controller = controller;
         _autoStart = autoStart;
         _registrar = registrar;
+        _mcpServer = mcpServer;
         _theme = new ThemeController(this);
         InitializeComponent();
 
@@ -60,12 +63,16 @@ public partial class SettingsWindow : FluentWindow
         FontBox.SelectedItem = fonts.First(x => string.Equals(x, config.Current.FontFamily, StringComparison.OrdinalIgnoreCase));
         BoldToggle.IsChecked = config.Current.FontBold;
         CommandBox.Text = _registrar.RegisterCommand;
+        McpPortBox.Value = config.Current.McpPort;
         _loading = false;
 
         _controller.Updated += OnUsageUpdated;
         LocalizationManager.Instance.CultureChanged += OnCultureChanged;
+        _mcpServer.StateChanged += OnMcpServerStateChanged;
         UpdateStatus();
         UpdateBothHidden();
+        UpdateMcpServerStatus();
+        UpdateAutoStartHint();
 
         // System mode needs the window handle to watch Windows theme changes, so apply again once loaded.
         _theme.Apply(_config.Current.Theme);
@@ -89,12 +96,41 @@ public partial class SettingsWindow : FluentWindow
         _closed = true;
         _controller.Updated -= OnUsageUpdated;
         LocalizationManager.Instance.CultureChanged -= OnCultureChanged;
+        _mcpServer.StateChanged -= OnMcpServerStateChanged;
         base.OnClosed(e);
     }
 
     private void OnUsageUpdated(object? sender, EventArgs e) => UpdateStatus();
 
-    private void OnCultureChanged(object? sender, EventArgs e) => UpdateStatus();
+    private void OnCultureChanged(object? sender, EventArgs e)
+    {
+        UpdateStatus();
+        UpdateMcpServerStatus();
+    }
+
+    private void OnMcpServerStateChanged(object? sender, EventArgs e)
+    {
+        UpdateMcpServerStatus();
+        CommandBox.Text = _registrar.RegisterCommand;
+    }
+
+    private void UpdateMcpServerStatus()
+    {
+        LocalizationManager loc = LocalizationManager.Instance;
+        if (_mcpServer.IsListening && _mcpServer.Port is int port)
+            McpServerText.Text = loc.Format("McpServerListening", McpHttpServer.BuildUrl(port));
+        else if (_mcpServer.LastError is { } error)
+            McpServerText.Text = loc.Format("McpServerFailed", _mcpServer.Port?.ToString() ?? "", error.Message);
+        else
+            McpServerText.Text = loc["McpServerStopped"];
+        McpServerText.Foreground = (System.Windows.Media.Brush)FindResource(_mcpServer.IsListening
+            ? "TextFillColorPrimaryBrush"
+            : "SystemFillColorCriticalBrush");
+    }
+
+    /// <summary>The HTTP server lives in the tray process, so without autostart Claude loses it after a reboot.</summary>
+    private void UpdateAutoStartHint()
+        => McpAutoStartText.Visibility = _autoStart.IsEnabled ? Visibility.Collapsed : Visibility.Visible;
 
     private void UpdateStatus()
     {
@@ -147,6 +183,18 @@ public partial class SettingsWindow : FluentWindow
             ShowSaveError(ex);
         }
         AutoStartToggle.IsChecked = _autoStart.IsEnabled;
+        UpdateAutoStartHint();
+    }
+
+    private void OnMcpPortChanged(object sender, RoutedEventArgs e)
+    {
+        if (_loading || McpPortBox.Value is not double value)
+            return;
+        int before = _config.Current.McpPort;
+        TrySave(c => c with { McpPort = (int)Math.Round(value) });
+        McpPortBox.Value = _config.Current.McpPort; // clamped to 1024..65535
+        if (_config.Current.McpPort != before)
+            McpPortChangedText.Visibility = Visibility.Visible;
     }
 
     private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)

@@ -31,6 +31,7 @@ public sealed class App : Application
     private UsageTrayController? _controller;
     private AutoStartManager? _autoStart;
     private ClaudeCliRegistrar? _registrar;
+    private McpHttpServer? _mcpServer;
     private SettingsWindow? _window;
     private bool _exiting;
 
@@ -75,8 +76,12 @@ public sealed class App : Application
 
             string exePath = Environment.ProcessPath!;
             _autoStart = new AutoStartManager(exePath);
-            _registrar = new ClaudeCliRegistrar(exePath);
+            _registrar = new ClaudeCliRegistrar(_config);
             _usage = new UsageProvider(new UsageApiClient(new CredentialReader()));
+            // Same provider as the tray icons, so MCP calls share the 30s cache. A failed listen only logs.
+            _mcpServer = new McpHttpServer(new McpRequestHandler(_usage), _log);
+            _mcpServer.Start(_config.Current.McpPort);
+            _config.Changed += OnConfigChanged;
             _host = new TrayIconHost(ShowSettings, () => _controller?.RefreshNow(), ExitApp);
             _controller = new UsageTrayController(_config, _usage, _host, new NumberIconRenderer(), Dispatcher, _log);
             _controller.Updated += OnFirstUsage;
@@ -98,6 +103,7 @@ public sealed class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _mcpServer?.Dispose();
         _controller?.Dispose();
         _host?.Dispose();
         _usage?.Dispose();
@@ -112,13 +118,20 @@ public sealed class App : Application
         if (_window is null)
         {
             LoadUiDictionaries();
-            _window = new SettingsWindow(_config!, _controller!, _autoStart!, _registrar!);
+            _window = new SettingsWindow(_config!, _controller!, _autoStart!, _registrar!, _mcpServer!);
             _window.Closed += OnWindowClosed;
         }
         _window.Show();
         if (_window.WindowState == WindowState.Minimized)
             _window.WindowState = WindowState.Normal;
         _window.Activate();
+    }
+
+    /// <summary>Restarts the MCP server when the port setting changed.</summary>
+    private void OnConfigChanged(object? sender, EventArgs e)
+    {
+        if (_mcpServer!.Port != _config!.Current.McpPort)
+            _mcpServer.Start(_config.Current.McpPort);
     }
 
     private void OnWindowClosed(object? sender, EventArgs e)

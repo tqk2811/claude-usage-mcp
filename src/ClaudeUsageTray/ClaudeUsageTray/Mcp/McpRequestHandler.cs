@@ -29,9 +29,6 @@ public sealed class McpRequestHandler
     public static JsonObject ParseError()
         => new() { ["jsonrpc"] = "2.0", ["id"] = null, ["error"] = new JsonObject { ["code"] = -32700, ["message"] = "Parse error" } };
 
-    /// <summary>True when <paramref name="msg"/> expects a response (a request: has an <c>id</c>).</summary>
-    public static bool IsRequest(JsonNode? msg) => msg is JsonObject obj && obj.ContainsKey("id");
-
     /// <summary>Handles one parsed message.</summary>
     /// <returns>The response; <c>null</c> for notifications and client responses (nothing to send).</returns>
     public async Task<JsonObject?> HandleAsync(JsonNode? msg)

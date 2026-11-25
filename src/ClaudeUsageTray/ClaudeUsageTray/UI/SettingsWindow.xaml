@@ -134,6 +134,16 @@
                         BorderThickness="1" CornerRadius="8" Padding="16,12">
                     <StackPanel>
                         <TextBlock Text="{loc:Tr McpDescription}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                        <TextBlock x:Name="McpAutoStartText" Text="{loc:Tr McpAutoStartHint}" FontSize="12" TextWrapping="Wrap"
+                                   Margin="0,0,0,8" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" />
+                        <WrapPanel Margin="0,0,0,8">
+                            <TextBlock Text="{loc:Tr McpPortHeader}" VerticalAlignment="Center" Margin="0,0,8,4" />
+                            <ui:NumberBox x:Name="McpPortBox" Width="150" Minimum="1024" Maximum="65535" SmallChange="1" MaxDecimalPlaces="0"
+                                          Margin="0,0,16,4" ValueChanged="OnMcpPortChanged" />
+                            <TextBlock x:Name="McpServerText" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,4" />
+                        </WrapPanel>
+                        <TextBlock x:Name="McpPortChangedText" Text="{loc:Tr McpPortChanged}" FontSize="12" TextWrapping="Wrap"
+                                   Margin="0,0,0,8" Foreground="{DynamicResource SystemFillColorCautionBrush}" Visibility="Collapsed" />
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

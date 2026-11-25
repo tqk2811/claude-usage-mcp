@@ -1,13 +1,15 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
+using ClaudeUsageTray.Config;
 using ClaudeUsageTray.Mcp.Models;
 
 namespace ClaudeUsageTray.Mcp;
 
 /// <summary>
-/// Registers this exe as the user-scope <c>claude-usage</c> MCP server through the <c>claude</c> CLI found on PATH
-/// (<c>claude.exe</c>, or the npm <c>claude.cmd</c> shim run through cmd.exe).
+/// Registers the tray's HTTP MCP server (<see cref="McpHttpServer"/>, port from the current config) as the user-scope
+/// <c>claude-usage</c> MCP server through the <c>claude</c> CLI found on PATH (<c>claude.exe</c>, or the npm
+/// <c>claude.cmd</c> shim run through cmd.exe).
 /// </summary>
 public sealed class ClaudeCliRegistrar
 {
@@ -15,19 +17,23 @@ public sealed class ClaudeCliRegistrar
 
     private static readonly TimeSpan RunTimeout = TimeSpan.FromSeconds(90);
 
-    private readonly string _executablePath;
+    private readonly AppConfig _config;
 
-    public ClaudeCliRegistrar(string executablePath)
+    public ClaudeCliRegistrar(AppConfig config)
     {
-        _executablePath = executablePath;
+        _config = config;
     }
 
+    public string ServerUrl => McpHttpServer.BuildUrl(_config.Current.McpPort);
+
     /// <summary>What a user would type to register by hand.</summary>
-    public string RegisterCommand => $"claude mcp add --scope user {ServerName} -- \"{_executablePath}\" --mcp";
+    public string RegisterCommand => $"claude {AddArguments}";
+
+    private string AddArguments => $"mcp add --scope user --transport http {ServerName} {ServerUrl}";
 
     /// <summary>
     /// Removes any user-scope entry first (failure ignored: usually "not found"), then adds, so registering again
-    /// after the exe moved replaces the old path instead of failing with "already exists".
+    /// after the port changed replaces the old URL instead of failing with "already exists".
     /// </summary>
     /// <returns>The result of <c>add</c>; <c>null</c> when <c>claude</c> is not on PATH.</returns>
     public async Task<CliResult?> RegisterAsync()
@@ -40,7 +46,7 @@ public sealed class ClaudeCliRegistrar
         {
             // Nothing to remove, or the CLI hiccuped: add reports the real problem.
         }
-        return await RunAsync($"mcp add --scope user {ServerName} -- \"{_executablePath}\" --mcp");
+        return await RunAsync(AddArguments);
     }
 
     /// <summary>Removes the entry from the scope <see cref="GetStatusAsync"/> reports (user when unknown).</summary>

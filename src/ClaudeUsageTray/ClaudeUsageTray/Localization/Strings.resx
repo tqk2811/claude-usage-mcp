@@ -41,7 +41,7 @@
   <data name="ThemeLight" xml:space="preserve"><value>Light</value></data>
   <data name="ThemeDark" xml:space="preserve"><value>Dark</value></data>
   <data name="McpHeader" xml:space="preserve"><value>MCP server for Claude Code</value></data>
-  <data name="McpDescription" xml:space="preserve"><value>This exe also runs as the claude-usage MCP server (--mcp). Register it for your user:</value></data>
+  <data name="McpDescription" xml:space="preserve"><value>While the tray is running it serves the claude-usage MCP server over HTTP at the URL below. Register it for your user:</value></data>
   <data name="Copy" xml:space="preserve"><value>Copy</value></data>
   <data name="Copied" xml:space="preserve"><value>Copied</value></data>
   <data name="Register" xml:space="preserve"><value>Register</value></data>
@@ -52,6 +52,12 @@
   <data name="McpStatusNotRegistered" xml:space="preserve"><value>Not registered</value></data>
   <data name="McpRunning" xml:space="preserve"><value>Running claude…</value></data>
   <data name="McpClaudeNotFound" xml:space="preserve"><value>claude was not found on PATH</value></data>
+  <data name="McpPortHeader" xml:space="preserve"><value>Port</value></data>
+  <data name="McpServerListening" xml:space="preserve"><value>Server listening on {0}</value></data>
+  <data name="McpServerFailed" xml:space="preserve"><value>Server could not listen on port {0}: {1}</value></data>
+  <data name="McpServerStopped" xml:space="preserve"><value>Server not running</value></data>
+  <data name="McpPortChanged" xml:space="preserve"><value>The port changed: click Register again so Claude uses the new URL.</value></data>
+  <data name="McpAutoStartHint" xml:space="preserve"><value>The MCP server only runs while the tray is running. Turn on Start with Windows so it is always available.</value></data>
   <data name="ErrorSaveConfig" xml:space="preserve"><value>Could not save settings</value></data>
   <data name="ConfigLoadFailed" xml:space="preserve"><value>Could not read {0}:
 {1}

@@ -6,8 +6,8 @@ using ClaudeUsageTray.Tray;
 namespace ClaudeUsageTray;
 
 /// <summary>
-/// Entry point. <c>--mcp</c> and <c>--once</c> branch off before any WPF type is touched (no mutex, no tray);
-/// otherwise a single tray instance runs, and a second launch asks it to open settings and exits.
+/// Entry point. <c>--once</c> branches off before any WPF type is touched (no mutex, no tray); otherwise a single tray
+/// instance runs (it also serves MCP over HTTP), and a second launch asks it to open settings and exits.
 /// </summary>
 public static class Program
 {
@@ -16,8 +16,6 @@ public static class Program
     [STAThread]
     public static int Main(string[] args)
     {
-        if (HasArg(args, "--mcp"))
-            return ConsoleModes.RunMcp();
         if (HasArg(args, "--once"))
             return ConsoleModes.RunOnce();
 

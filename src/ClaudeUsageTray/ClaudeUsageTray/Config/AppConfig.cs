@@ -92,6 +92,7 @@ public sealed class AppConfig
         IconOrder = Enum.IsDefined(data.IconOrder) ? data.IconOrder : IconOrder.SessionFirst,
         FontFamily = string.IsNullOrWhiteSpace(data.FontFamily) ? ConfigData.DefaultFontFamily : data.FontFamily.Trim(),
         RefreshSeconds = Math.Clamp(data.RefreshSeconds, ConfigData.MinRefreshSeconds, ConfigData.MaxRefreshSeconds),
+        McpPort = Math.Clamp(data.McpPort, ConfigData.MinMcpPort, ConfigData.MaxMcpPort),
         Session = Normalize(data.Session ?? new IconSettings()),
         Weekly = Normalize(data.Weekly ?? IconSettings.CreateWeeklyDefault()),
     };

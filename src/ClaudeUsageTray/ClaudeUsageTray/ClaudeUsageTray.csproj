@@ -10,7 +10,7 @@
 		<!-- Exe/taskbar icon; regenerate with Assets\make-icon.ps1. -->
 		<ApplicationIcon>Assets\app.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<!-- Own Main (Program.cs): the MCP/CLI modes branch off before any WPF type is touched. -->
+		<!-- Own Main (Program.cs): the CLI mode branches off before any WPF type is touched. -->
 		<StartupObject>ClaudeUsageTray.Program</StartupObject>
 		<!-- Mostly idle in the tray: no background GC thread, and give memory back eagerly. -->
 		<ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>

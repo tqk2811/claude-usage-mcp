@@ -10,6 +10,9 @@ public sealed record ConfigData
     public const int MinRefreshSeconds = 30;
     public const int MaxRefreshSeconds = 86400;
     public const string DefaultFontFamily = "Segoe UI";
+    public const int MinMcpPort = 1024;
+    public const int MaxMcpPort = 65535;
+    public const int DefaultMcpPort = 52417;
 
     public ThemeMode Theme { get; set; } = ThemeMode.System;
 
@@ -30,4 +33,7 @@ public sealed record ConfigData
     public IconSettings Session { get; set; } = new();
 
     public IconSettings Weekly { get; set; } = IconSettings.CreateWeeklyDefault();
+
+    /// <summary>Port of the MCP HTTP server (<c>http://127.0.0.1:&lt;port&gt;/mcp</c>) the tray runs.</summary>
+    public int McpPort { get; set; } = DefaultMcpPort;
 }
