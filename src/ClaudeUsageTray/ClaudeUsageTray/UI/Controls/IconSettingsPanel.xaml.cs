@@ -68,6 +68,13 @@ public partial class IconSettingsPanel : UserControl
         BackgroundColor = BackgroundColorBox.Color,
     });
 
+    /// <summary>Back to this icon's default thresholds and colors; visibility is kept.</summary>
+    private void OnResetClick(object sender, RoutedEventArgs e) => Change(s =>
+    {
+        IconSettings defaults = _kind == UsageIconKind.Session ? new IconSettings() : IconSettings.CreateWeeklyDefault();
+        return defaults with { Visible = s.Visible };
+    });
+
     private void Change(Func<IconSettings, IconSettings> change)
     {
         if (_loading || _config is null)

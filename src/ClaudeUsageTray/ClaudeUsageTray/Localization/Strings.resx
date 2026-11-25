@@ -58,6 +58,7 @@
 
 Starting with default settings.</value></data>
   <data name="IconOrderHeader" xml:space="preserve"><value>Icon order</value></data>
+  <data name="ResetColors" xml:space="preserve"><value>Reset to defaults</value></data>
   <data name="IconOrderDescription" xml:space="preserve"><value>Which number shows in the left icon and which in the right one</value></data>
   <data name="OrderSessionFirst" xml:space="preserve"><value>Session first</value></data>
   <data name="OrderWeeklyFirst" xml:space="preserve"><value>Weekly first</value></data>

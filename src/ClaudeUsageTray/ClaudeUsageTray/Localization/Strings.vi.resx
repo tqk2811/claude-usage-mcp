@@ -58,6 +58,7 @@
 
 Dùng cài đặt mặc định.</value></data>
   <data name="IconOrderHeader" xml:space="preserve"><value>Thứ tự biểu tượng</value></data>
+  <data name="ResetColors" xml:space="preserve"><value>Khôi phục mặc định</value></data>
   <data name="IconOrderDescription" xml:space="preserve"><value>Số nào hiện ở biểu tượng bên trái, số nào ở bên phải</value></data>
   <data name="OrderSessionFirst" xml:space="preserve"><value>Phiên trước</value></data>
   <data name="OrderWeeklyFirst" xml:space="preserve"><value>Tuần trước</value></data>
