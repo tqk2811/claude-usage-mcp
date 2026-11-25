@@ -69,7 +69,16 @@ public partial class IconSettingsPanel : UserControl
     });
 
     /// <summary>Back to this icon's default thresholds and colors; visibility is kept.</summary>
-    private void OnResetClick(object sender, RoutedEventArgs e) => Change(s =>
+    private void OnResetClick(object sender, RoutedEventArgs e)
+    {
+        LocalizationManager loc = LocalizationManager.Instance;
+        MessageBoxResult answer = MessageBox.Show(Window.GetWindow(this), loc["ResetColorsConfirm"], TitleText.Text,
+            MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+        if (answer == MessageBoxResult.Yes)
+            ResetToDefaults();
+    }
+
+    private void ResetToDefaults() => Change(s =>
     {
         IconSettings defaults = _kind == UsageIconKind.Session ? new IconSettings() : IconSettings.CreateWeeklyDefault();
         return defaults with { Visible = s.Visible };
